@@ -1,0 +1,470 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0">
+<title>Carbon Passport Demo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Design tokens copied from the original Carbon Passport app (index.css): flat sage/navy palette, 20px cards, 16px buttons, soft shadow */
+:root{
+  --bg:#F7F8F5; --card:#FFFFFF; --line:#E6EBEF; --ink:#2D3A4F; --muted:#5F7291;
+  --sage:#4F9163; --sage-deep:#2F7348; --mint:#AED9BB; --pale:#C1DFE1; --teal:#5FA9A4;
+  --lemon:#EAEFA9; --coral:#ECB4AB; --navy:#2D3A4F; --on-sage:#FFFFFF; --field:#FFFFFF;
+  --c1:#5F7291; --c2:#5FA9A4; --c3:#4F9163; --c4:#C9BC52; --c5:#ECB4AB;
+  --r-card:20px; --r-btn:16px; --r-sm:12px; --r-xs:8px;
+  --shadow:0 4px 20px rgba(0,0,0,.05);
+  --font:"Pretendard",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#E2E8F0;color:var(--ink);font-family:var(--font);font-size:15px;font-weight:600;line-height:1.5}
+.wrap{max-width:430px;margin:0 auto;background:var(--bg);min-height:100vh;padding:0 20px 40px;box-shadow:0 10px 50px rgba(0,0,0,.1)}
+h1,h2,h3{font-family:var(--font);font-weight:800;margin:0;text-wrap:balance}
+p{margin:0}
+.demo-bar{margin:0 -20px;padding:8px 16px;background:var(--lemon);color:var(--sage-deep);font-size:12px;font-weight:700;text-align:center;text-wrap:balance}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 0 4px}
+.brand{font-weight:800;font-size:20px;color:var(--ink);line-height:1.2}
+.brand small{display:block;font-weight:700;font-size:12px;color:var(--muted)}
+.reset{background:var(--card);border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:6px 12px;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:14px 0 18px;padding:0;list-style:none}
+.steps button{width:100%;border:0;background:var(--pale);color:var(--teal);border-radius:999px;padding:8px 6px;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+.steps button[aria-current="step"]{background:var(--sage);color:var(--on-sage)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:1.5rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.card h2{font-size:1.125rem;margin-bottom:4px}
+.card h3{font-size:1rem;margin-bottom:8px}
+.sub{color:var(--muted);font-size:.875rem;font-weight:600;line-height:1.5;text-wrap:pretty}
+.field{display:flex;flex-direction:column;gap:6px;margin-top:12px;min-width:0}
+.field>label,.lbl{font-size:.75rem;font-weight:700;color:var(--muted)}
+input[type=text],input[type=number],select{width:100%;min-width:0;background:var(--field);color:var(--ink);border:1px solid var(--line);border-radius:var(--r-sm);padding:11px 12px;font:inherit;font-size:15px}
+input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--sage);outline-offset:2px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row>*{min-width:0}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-sm);padding:3px}
+.seg button{border:0;background:transparent;color:var(--muted);padding:9px 6px;border-radius:var(--r-xs);font:inherit;font-size:13px;font-weight:800;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--mint);color:var(--sage-deep)}
+.leg-kg{font-weight:800;color:var(--sage);font-variant-numeric:tabular-nums}
+.btn{display:block;width:100%;border:0;border-radius:var(--r-btn);padding:1.125rem 1rem;font:inherit;font-weight:800;font-size:1.0625rem;cursor:pointer;background:var(--sage);color:var(--on-sage);text-align:center}
+.btn.ghost{background:transparent;color:var(--muted);border:2px solid var(--line);padding:calc(1.125rem - 2px) 1rem}
+.btn:active{opacity:.7}
+.btns{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin:16px 0}
+.btns.one{grid-template-columns:1fr}
+.tabs{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
+.tabs button{flex:1 1 auto;min-width:64px;border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:var(--r-sm);padding:9px 10px;font:inherit;font-weight:800;font-size:13px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--sage);color:var(--on-sage);border-color:var(--sage)}
+.day-sum{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px}
+.big{font-weight:800;font-size:1.75rem;font-variant-numeric:tabular-nums;color:var(--ink)}
+.meter{height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--sage);border-radius:4px}
+.meter.over i{background:var(--coral)}
+.checks{display:grid;gap:8px;margin-top:8px}
+.check{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r-sm);cursor:pointer;font-size:14px}
+.check input{width:18px;height:18px;accent-color:var(--sage);flex:none}
+.check span.kg{margin-left:auto;color:var(--muted);font-variant-numeric:tabular-nums;font-size:13px}
+/* Result hero: deep navy card like hero-score-card */
+.hero{background:var(--navy);color:#fff;border-radius:var(--r-card);padding:2rem 1.5rem;margin-bottom:1rem;text-align:center;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;gap:1rem}
+.hero .lbl{color:rgba(255,255,255,.7);font-size:1rem;font-weight:700}
+.hero .num{font-weight:800;font-size:3.5rem;line-height:1;font-variant-numeric:tabular-nums}
+.hero .num small{font-size:1.25rem;font-weight:700;margin-left:4px}
+.badge{display:inline-block;background:var(--lemon);color:var(--sage-deep);border-radius:var(--r-btn);padding:6px 16px;font-size:.875rem;font-weight:800}
+.hero .note{font-size:.75rem;color:rgba(255,255,255,.5);font-weight:600;line-height:1.4;text-wrap:pretty}
+.stack{display:flex;height:16px;border-radius:8px;overflow:hidden;gap:2px;margin:10px 0 12px}
+.stack i{display:block;min-width:2px}
+.legend{display:grid;gap:6px;font-size:14px}
+.legend div{display:grid;grid-template-columns:12px 1fr auto;gap:10px;align-items:center}
+.legend b{font-weight:800;font-variant-numeric:tabular-nums}
+.dot{width:12px;height:12px;border-radius:3px}
+/* Day chips: mint when within goal, coral when over (db-day-chip) */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{flex:1;min-width:52px;border-radius:var(--r-sm);padding:8px;text-align:center;display:flex;flex-direction:column;gap:2px;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums}
+.chip b{font-size:14px;font-weight:700;line-height:1.2}
+.chip.ok{background:var(--mint);color:var(--sage-deep)}
+.chip.over{background:var(--coral);color:#8B3A38}
+.chip small{font-size:9px;font-weight:700}
+/* Missions: mint progress card, white list card, lemon verdict */
+.prog{background:var(--mint);border-radius:var(--r-card);padding:1rem 1.125rem;margin-bottom:1rem}
+.prog.off{background:var(--coral)}
+.prog-top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:.625rem;color:var(--sage-deep)}
+.prog.off .prog-top,.prog.off .prog-foot{color:var(--navy)}
+.prog-top span{font-size:.8125rem;font-weight:700}
+.prog-top b{font-size:1.375rem;font-weight:800}
+.prog-top em{font-style:normal;font-size:.875rem;opacity:.75}
+.bar{height:8px;border-radius:4px;background:rgba(255,255,255,.65);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:4px;background:var(--sage-deep)}
+.prog.off .bar i{background:var(--navy)}
+.prog-foot{font-size:.6875rem;font-weight:700;color:var(--sage-deep);opacity:.85;margin-top:.5rem}
+.missions{list-style:none;margin:0;padding:0}
+.missions li{display:flex;gap:.625rem;align-items:flex-start;padding:.6875rem 0;border-bottom:1px solid var(--line);font-size:.8125rem;font-weight:700;line-height:1.35}
+.missions li:last-child{border-bottom:0}
+.mark{width:20px;height:20px;flex:0 0 20px;margin-top:1px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6875rem;font-weight:800;background:var(--line);color:var(--muted)}
+.met .mark{background:var(--sage);color:#fff}
+.missions li:not(.met){color:#9AA7B5}
+.verdict{background:var(--lemon);border-radius:var(--r-card);padding:.875rem 1rem;text-align:center;margin-top:1rem}
+.verdict b{display:block;color:var(--sage-deep);font-size:.875rem;font-weight:800;line-height:1.6}
+.verdict .sub{font-size:.75rem;color:var(--ink)}
+.offset q{quotes:none}
+details{border:1px solid var(--line);background:var(--card);border-radius:var(--r-card);padding:0 1.5rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+summary{cursor:pointer;padding:16px 0;font-weight:800;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";float:right;color:var(--muted)}
+details[open] summary::after{content:"–"}
+.scroll{overflow-x:auto;margin:6px 0 12px}
+table{border-collapse:collapse;width:100%;font-size:13px;min-width:420px}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11.5px;color:var(--muted)}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.fine{font-size:12px;color:var(--muted);text-wrap:pretty;padding-bottom:14px}
+.warn{font-size:12.5px;color:var(--muted);margin-top:8px;text-wrap:pretty}
+.cmp{display:grid;gap:6px}
+.dn{margin-top:12px;padding:8px 10px;border-left:3px solid var(--mint);background:var(--bg);border-radius:0 var(--r-xs) var(--r-xs) 0;font-size:12px;line-height:1.5;color:var(--muted);font-weight:600;text-wrap:pretty}
+.dn b{display:block;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--sage-deep);font-weight:800}
+.modes{display:flex;flex-wrap:wrap;gap:6px}
+.modes button{flex:1 1 auto;border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:var(--r-sm);padding:9px 10px;font:inherit;font-weight:800;font-size:13px;cursor:pointer}
+.modes button[aria-pressed="true"]{background:var(--sage);color:var(--on-sage);border-color:var(--sage)}
+.cmp-row{display:grid;grid-template-columns:minmax(92px,1.1fr) 1.6fr auto;gap:10px;align-items:center;width:100%;text-align:left;font:inherit;font-size:13.5px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:var(--r-sm);padding:9px 10px}
+button.cmp-row{cursor:pointer}
+button.cmp-row:disabled{opacity:.45;cursor:not-allowed}
+.cmp-row.sel{border-color:var(--sage);background:var(--mint)}
+.cmp-bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.cmp-bar i{display:block;height:100%;background:var(--c1);border-radius:4px}
+.cmp-row.sel .cmp-bar i{background:var(--sage-deep)}
+.cmp-kg{font-variant-numeric:tabular-nums;font-weight:800;min-width:58px;text-align:right}
+.cmp-name small{display:block;font-size:11.5px;color:var(--muted);font-weight:600}
+.intro p{text-wrap:pretty}
+.intro .how-h{margin:14px 0 6px}
+.how{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14px}
+.how b{color:var(--sage-deep)}
+.intro .try{margin-top:12px;padding:10px 12px;background:var(--lemon);color:var(--sage-deep);border-radius:var(--r-sm);font-size:13.5px;font-weight:700}
+.card.center{text-align:center}
+.slider-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.slider-head label{font-size:.75rem;font-weight:700;color:var(--muted)}
+.slider-head b{font-size:1.25rem;font-weight:800;color:var(--sage);font-variant-numeric:tabular-nums}
+.range{width:100%;accent-color:var(--sage);margin:6px 0 0;height:28px;cursor:pointer}
+.slider-ends{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.meter i,.stack i{transition:width .25s ease}}
+@media (max-width:380px){.hero .num{font-size:3rem}.row{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+  <div class="demo-bar">Portfolio demo with sample data. Nothing you enter is saved or sent anywhere.</div>
+  <header class="top">
+    <div class="brand"><small>Zevetrip</small>Carbon Passport</div>
+    <button class="reset" id="reset" type="button">Reset sample</button>
+  </header>
+  <ol class="steps" id="steps"></ol>
+  <main id="screen"></main>
+</div>
+
+<script>
+/* ===== Confirmed coefficients (single source: project master table) ===== */
+var DAILY_TARGET_KG = 16, ANNUAL_BUDGET_KG = 5900, MISSION_TOTAL = 7, MISSION_THRESHOLD = 4, TREE_KG = 6.6;
+
+/* Long-distance modes: g = g CO2e per km, v = average speed km/h (distance = travel time x speed) */
+var LONG_MODES = [
+  { id:'ktx',   label:'KTX (high-speed rail)',  g:21.9,  v:173 },
+  { id:'coach', label:'Express bus',            g:27.76, v:95 },
+  { id:'rail',  label:'Regular train',          g:35.46, v:80 },
+  { id:'car',   label:'Private car',            g:161,   v:90 },
+  { id:'air',   label:'Domestic flight',        g:null,  v:450 }
+];
+
+var CITY = [
+  { id:'none',   label:'No local transport', kg:0 },
+  { id:'walk',   label:'Walking / cycling',  kg:0.12 },
+  { id:'bus',    label:'Bus',                kg:0.53 },
+  { id:'subway', label:'Subway / metro',     kg:0.86 },
+  { id:'ev',     label:'Electric car',       kg:1.42 },
+  { id:'taxi',   label:'Taxi / private car', kg:1.83 }
+];
+var LOW_CITY = { walk:1, bus:1, subway:1 };
+
+var MEALS = [
+  { id:'none',   label:'No meal / skipped',               kg:0,    eco:false },
+  { id:'vegan',  label:'Fully vegan',                     kg:0.59, eco:true  },
+  { id:'vdairy', label:'Vegetarian (with dairy)',         kg:1.39, eco:true  },
+  { id:'vsea',   label:'Vegetarian (with seafood)',       kg:1.63, eco:true  },
+  { id:'chick',  label:'Chicken main (200 g)',            kg:2.57, eco:false },
+  { id:'rsmall', label:'Red meat, small side (40 g)',     kg:2.92, eco:false },
+  { id:'pork',   label:'Pork main (200 g)',               kg:2.99, eco:false },
+  { id:'rmain',  label:'Red meat main (150 g)',           kg:9.31, eco:false }
+];
+var STAYS = [
+  { id:'none',   label:'No overnight stay',                          kg:0 },
+  { id:'camp',   label:'Camping',                                    kg:1.4 },
+  { id:'unrated',label:'Unrated stay (guesthouse, homestay, small hotel)', kg:4.73 },
+  { id:'h23',    label:'2–3 star hotel',                             kg:8.5 },
+  { id:'h4',     label:'4 star hotel',                               kg:11.43 },
+  { id:'h5',     label:'5 star hotel',                               kg:17.11 },
+  { id:'resort', label:'Resort',                                     kg:28.9 }
+];
+var LOCAL_STAY = { camp:1, unrated:1 };
+var ITEMS = [
+  { id:'tumbler',   label:'Used my own tumbler',          kg:0 },
+  { id:'container', label:'Used a reusable food container', kg:0 },
+  { id:'cup',       label:'Single-use cup',               kg:0.07 },
+  { id:'delivery',  label:'Delivery food order',          kg:0.5 },
+  { id:'frozen',    label:'Frozen food / cooler pack',    kg:1.5 }
+];
+var SINGLE_USE = { cup:1, delivery:1, frozen:1 };
+
+var MISSIONS = [
+  'Travel long distance without flying',
+  'Get around locally on foot, by bike or on public transit every day',
+  'Eat at least one plant-based meal',
+  'Stay in a local, low-impact place (camping or unrated stay)',
+  'Avoid single-use cups, delivery and frozen food',
+  'Bring your own tumbler',
+  'Bring a reusable food container'
+];
+
+/* ===== State (memory only, resets on reload) ===== */
+var S, screenIdx = 0, activeDay = 0;
+function sampleState(){
+  function day(t,u,m,st,it){ return { city:t, units:u, meals:m.slice(), stay:st, items:Object.assign({tumbler:0,container:0,cup:0,delivery:0,frozen:0},it) }; }
+  return {
+    title:'Summer holiday',
+    days:3,
+    from:'Seoul', to:'Busan', km:405, trip:'round', mode:'car',
+    rec:[
+      day('subway',4,['vdairy','vegan','rmain'],'unrated',{tumbler:1,container:1}),
+      day('walk',4,['vsea','vegan','vdairy'],'unrated',{tumbler:1}),
+      day('bus',2,['vegan','vdairy','none'],'none',{tumbler:1,container:1})
+    ]
+  };
+}
+S = sampleState();
+
+/* ===== Calculation ===== */
+function routeKm(){ return S.km; }
+function hoursFor(modeId){ return S.km / byId(LONG_MODES,modeId).v; }
+function modeKg(modeId, km, round){
+  var m = byId(LONG_MODES,modeId), n = round ? 2 : 1;
+  if (modeId==='air'){
+    if (km < 180 || km > 450) return null;   /* flights only 180-450 km: emissions data range */
+    return km * (km < 300 ? 164.6 : 130.9) / 1000 * n;
+  }
+  return km * m.g / 1000 * n;
+}
+function byId(list,id){ for (var i=0;i<list.length;i++) if (list[i].id===id) return list[i]; return list[0]; }
+function dayParts(d){
+  var city = byId(CITY,d.city).kg * d.units;
+  var meals = d.meals.reduce(function(a,m){ return a + byId(MEALS,m).kg; },0);
+  var stay = byId(STAYS,d.stay).kg;
+  var items = ITEMS.reduce(function(a,it){ return a + (d.items[it.id] ? it.kg : 0); },0);
+  return { city:city, meals:meals, stay:stay, items:items, total:city+meals+stay+items };
+}
+function compute(){
+  var longd = modeKg(S.mode, routeKm(), S.trip==='round');
+  var parts = S.rec.map(dayParts);
+  var cat = { longd:longd, city:0, meals:0, stay:0, items:0 };
+  parts.forEach(function(p){ cat.city+=p.city; cat.meals+=p.meals; cat.stay+=p.stay; cat.items+=p.items; });
+  var total = cat.longd+cat.city+cat.meals+cat.stay+cat.items;
+  var anyItem = function(id){ return S.rec.some(function(d){ return d.items[id]; }); };
+  var stayDays = S.rec.filter(function(d){ return d.stay !== 'none'; });
+  var m = [
+    S.mode !== 'air',
+    S.rec.every(function(d){ return LOW_CITY[d.city]; }),
+    S.rec.some(function(d){ return d.meals.some(function(x){ return byId(MEALS,x).eco; }); }),
+    stayDays.length > 0 && stayDays.every(function(d){ return LOCAL_STAY[d.stay]; }),
+    !Object.keys(SINGLE_USE).some(anyItem),
+    anyItem('tumbler'),
+    anyItem('container')
+  ];
+  return { cat:cat, parts:parts, total:total, missions:m, met:m.filter(Boolean).length };
+}
+
+/* ===== Helpers ===== */
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function f1(n){ return n.toFixed(1); }
+function f2(n){ return n.toFixed(2); }
+function opts(list,sel,showKg){ return list.map(function(o){
+  return '<option value="'+o.id+'"'+(o.id===sel?' selected':'')+'>'+esc(o.label)+(showKg?' ('+f2(o.kg)+' kg)':'')+'</option>'; }).join(''); }
+
+/* ===== Screens ===== */
+function renderSteps(){
+  var names = ['1 Trip','2 Daily record','3 Result'];
+  document.getElementById('steps').innerHTML = names.map(function(n,i){
+    return '<li><button type="button" data-go="'+i+'"'+(i===screenIdx?' aria-current="step"':'')+'>'+n+'</button></li>'; }).join('');
+}
+
+function compareHtml(interactive){
+  var km = routeKm(), round = S.trip==='round';
+  var rows = LONG_MODES.map(function(m){ return { m:m, kg:modeKg(m.id,km,round) }; });
+  var max = Math.max.apply(null, rows.map(function(r){ return r.kg||0; }));
+  var html = rows.map(function(r){
+    var sel = r.m.id===S.mode, off = r.kg===null;
+    var inner = '<span class="cmp-name">'+esc(r.m.label)+'<small>about '+f1(km/r.m.v)+' h one way</small></span>'+
+      '<span class="cmp-bar"><i style="width:'+(off?0:r.kg/max*100)+'%"></i></span>'+
+      '<span class="cmp-kg">'+(off?'n/a':f1(r.kg)+' kg')+'</span>';
+    if (!interactive) return '<div class="cmp-row'+(sel?' sel':'')+'">'+inner+'</div>';
+    return '<button type="button" class="cmp-row'+(sel?' sel':'')+'" data-mode="'+r.m.id+'" aria-pressed="'+sel+'"'+(off?' disabled':'')+'>'+inner+'</button>';
+  }).join('');
+  var ktx = modeKg('ktx',km,round), cur = modeKg(S.mode,km,round);
+  var save = (cur!==null && S.mode!=='ktx') ? '<p class="warn">Taking KTX instead would cut '+f1(cur-ktx)+' kg ('+Math.round((cur-ktx)/cur*100)+'%).</p>' : '';
+  var air = km<180 ? 'Flights are hidden under 180 km, the shortest domestic route.' : 'Domestic flights are limited to 180\u2013450 km, the range our emissions data covers.';
+  return '<div class="cmp">'+html+'</div>'+save+'<p class="warn">'+air+' Car uses life-cycle figures while rail and flights use operating emissions, so read the gap with care.</p>';
+}
+
+function hintText(){
+  var m = byId(LONG_MODES,S.mode);
+  return 'About '+routeKm()+' km at an average '+m.v+' km/h for '+esc(m.label.toLowerCase())+'. The list below compares the same distance across other modes.';
+}
+function liveTrip(){
+  var lk = modeKg(S.mode, routeKm(), S.trip==='round');
+  document.getElementById('longKg').textContent = (lk===null?'\u2013':f1(lk))+' kg';
+  document.getElementById('hrsHint').textContent = hintText();
+  document.getElementById('cmpBox').innerHTML = compareHtml(false);
+}
+
+function screenTrip(){
+  var dayOpts = [1,2,3,4,5].map(function(n){ return '<option value="'+n+'"'+(n===S.days?' selected':'')+'>'+n+(n===1?' day (day trip)':' days')+'</option>'; }).join('');
+  var longd = modeKg(S.mode, routeKm(), S.trip==='round');
+  var modeBtns = LONG_MODES.map(function(m){ return '<button type="button" data-mode="'+m.id+'" aria-pressed="'+(m.id===S.mode)+'">'+esc(m.label)+'</button>'; }).join('');
+  var intro = '<div class="card intro"><p>A travel carbon-footprint toolkit from Zevetrip. It treats travel as both a privilege and a responsibility: record how you moved, where you stayed, what you ate and what you used, and see what your trip adds up to.</p>'+
+    '<h3 class="how-h">How it works</h3><ul class="how">'+
+    '<li><b>Log</b> transport, meals, stays and things you used, every day of the trip.</li>'+
+    '<li><b>Score</b> each choice: 1 kgCO\u2082e equals 1 point.</li>'+
+    '<li><b>Compare</b> with a daily goal of about 16 points, which comes from a personal yearly budget of about 5,900 kgCO\u2082e (Green Transition Institute, 1.5\u00b0C Lifestyle calculator).</li>'+
+    '<li><b>Reflect.</b></li></ul>'+
+    '<p class="try">Try it: a sample trip is filled in. Change any choice and the score updates.</p></div>';
+  return intro+'<div class="card"><h2>Plan your trip</h2><p class="sub">Add your trip details, then log each day. Every 1 kgCO\u2082e counts as 1 point.</p>'+
+    '<div class="field"><label for="title">Trip title</label><input id="title" type="text" maxlength="40" value="'+esc(S.title)+'"></div>'+
+    '<div class="row"><div class="field"><label for="from">Departure</label><input id="from" type="text" maxlength="30" value="'+esc(S.from)+'"></div>'+
+    '<div class="field"><label for="to">Destination</label><input id="to" type="text" maxlength="30" value="'+esc(S.to)+'"></div></div>'+
+    '<div class="field"><label for="days">Trip length</label><select id="days">'+dayOpts+'</select></div></div>'+
+    '<div class="card"><div class="day-sum"><h2>Long-distance travel</h2><span class="leg-kg" id="longKg">'+(longd===null?'\u2013':f1(longd))+' kg</span></div>'+
+    '<p class="sub">Pick your transport first, then set the travel time. The distance is worked out from the average speed, and the same distance is compared across modes below.</p>'+
+    '<div class="field"><span class="lbl">Transport</span><div class="modes" role="group" aria-label="Long-distance transport">'+modeBtns+'</div></div>'+
+    '<div class="field"><div class="slider-head"><label for="hrs">Travel time, one way</label><b id="hrsVal">'+f1(hoursFor(S.mode))+' h</b></div>'+
+    '<input id="hrs" class="range" type="range" min="'+(S.mode==='air'?0.4:0.2)+'" max="'+(S.mode==='air'?1:10)+'" step="0.1" value="'+f1(hoursFor(S.mode))+'">'+
+    '<div class="slider-ends"><span>'+(S.mode==='air'?0.4:0.2)+' h</span><span>'+(S.mode==='air'?1:10)+' h</span></div></div>'+
+    '<p class="warn" id="hrsHint">'+hintText()+'</p>'+
+    '<div class="field"><span class="lbl">Trip type</span><div class="seg" role="group" aria-label="Trip type">'+
+      '<button type="button" data-trip="oneway" aria-pressed="'+(S.trip==='oneway')+'">One way</button>'+
+      '<button type="button" data-trip="round" aria-pressed="'+(S.trip==='round')+'">Round trip</button></div></div>'+
+    '<div class="field"><span class="lbl">Same distance, other modes \u00b7 '+(S.trip==='round'?'round trip':'one way')+'</span>'+'<div id="cmpBox">'+compareHtml(false)+'</div></div>'+'<p class="dn"><b>Design note</b>Travel time comes first because people remember hours better than kilometres. Distance follows from each mode\u2019s average speed, so the comparison always covers the same trip.</p>'+'</div>'+
+    '<div class="btns one"><button type="button" class="btn" data-go="1">Continue to daily record</button></div>';
+}
+
+function screenDay(){
+  var d = S.rec[activeDay], p = dayParts(d), over = p.total > DAILY_TARGET_KG;
+  var pct = Math.min(100, p.total / DAILY_TARGET_KG * 100);
+  var tabs = S.rec.map(function(_,i){ return '<button type="button" data-day="'+i+'" aria-pressed="'+(i===activeDay)+'">Day '+(i+1)+'</button>'; }).join('');
+  var unitsOpts = [1,2,3,4,5,6].map(function(n){ return '<option value="'+n+'"'+(n===d.units?' selected':'')+'>'+(n*30)+' min</option>'; }).join('');
+  var meals = d.meals.map(function(m,i){
+    return '<div class="field"><label for="meal'+i+'">'+['Breakfast','Lunch','Dinner'][i]+'</label><select id="meal'+i+'" data-meal="'+i+'">'+opts(MEALS,m,true)+'</select></div>'; }).join('');
+  var items = ITEMS.map(function(it){
+    return '<label class="check"><input type="checkbox" data-item="'+it.id+'"'+(d.items[it.id]?' checked':'')+'><span>'+esc(it.label)+'</span><span class="kg">'+(it.kg?f2(it.kg)+' kg':'0 kg')+'</span></label>'; }).join('');
+  var last = activeDay === S.rec.length-1;
+  return '<div class="tabs" role="group" aria-label="Day">'+tabs+'</div>'+
+    '<div class="card"><div class="day-sum"><div><span class="lbl">Day '+(activeDay+1)+' total</span><div class="big">'+f1(p.total)+' <span style="font-size:15px;font-weight:700">kg</span></div></div>'+
+    '<span class="sub">Daily goal: '+DAILY_TARGET_KG+' or less</span></div>'+
+    '<div class="meter'+(over?' over':'')+'"><i style="width:'+pct+'%"></i></div>'+
+    '<p class="warn">'+(over?'Over today’s goal by '+f1(p.total-DAILY_TARGET_KG)+' kg.':'Within today’s goal.')+' Long-distance travel is counted separately.</p>'+'<p class="dn"><b>Design note</b>A small, concrete daily goal (16 kg). Long-distance travel is kept out of it, so a single big trip cannot hide the choices a person makes each day.</p>'+'</div>'+
+    '<div class="card"><h3>Getting around locally</h3><div class="row">'+
+    '<div class="field" style="margin-top:0"><label for="city">Main transport</label><select id="city" data-bind="city">'+opts(CITY,d.city,false)+'</select></div>'+
+    '<div class="field" style="margin-top:0"><label for="units">Time on it</label><select id="units" data-bind="units">'+unitsOpts+'</select></div></div>'+
+    '<p class="warn">Local transport is scored per 30 minutes: '+f2(byId(CITY,d.city).kg)+' kg each.</p></div>'+
+    '<div class="card"><h3>Meals</h3>'+meals+'<p class="dn"><b>Design note</b>The kg value sits beside every option, so the trade-off is visible at the moment of choosing.</p>'+'</div>'+
+    '<div class="card"><h3>Overnight stay</h3><div class="field" style="margin-top:0"><label for="stay">Where did you sleep?</label><select id="stay" data-bind="stay">'+opts(STAYS,d.stay,true)+'</select></div>'+
+    (last?'<p class="warn">On the last day, “No overnight stay” is preselected so a night you did not spend is never counted.</p>':'')+'</div>'+
+    '<div class="card"><h3>Things you used</h3><div class="checks">'+items+'</div></div>'+
+    '<div class="btns"><button type="button" class="btn ghost" data-go="0">Back</button><button type="button" class="btn" data-go="'+(last?2:'next')+'">'+(last?'See my result':'Next day')+'</button></div>';
+}
+
+function screenResult(){
+  var r = compute(), pct = r.total / ANNUAL_BUDGET_KG * 100;
+  var trees = r.total / TREE_KG;
+  var cats = [
+    ['Long-distance', r.cat.longd, 'var(--c1)'], ['Local transport', r.cat.city, 'var(--c2)'],
+    ['Meals', r.cat.meals, 'var(--c3)'], ['Stays', r.cat.stay, 'var(--c4)'], ['Things you used', r.cat.items, 'var(--c5)']
+  ];
+  var stack = cats.map(function(c){ return '<i style="width:'+(r.total?c[1]/r.total*100:0)+'%;background:'+c[2]+'"></i>'; }).join('');
+  var legend = cats.map(function(c){ return '<div><span class="dot" style="background:'+c[2]+'"></span><span>'+c[0]+'</span><b>'+f1(c[1])+' kg</b></div>'; }).join('');
+  var chips = r.parts.map(function(p,i){ return '<div class="chip'+(p.total>DAILY_TARGET_KG?' over':' ok')+'"><span>Day '+(i+1)+'</span><b>'+f1(p.total)+'</b><small>'+(p.total>DAILY_TARGET_KG?'Over goal':'Goal met')+'</small></div>'; }).join('');
+  var ms = MISSIONS.map(function(t,i){ return '<li class="'+(r.missions[i]?'met':'')+'"><span class="mark" aria-hidden="true">'+(r.missions[i]?'✓':'–')+'</span><span><span class="sr" style="position:absolute;left:-9999px">'+(r.missions[i]?'Done: ':'Not done: ')+'</span>'+esc(t)+'</span></li>'; }).join('');
+  var bar = ''; for (var i=0;i<MISSION_TOTAL;i++) bar += '<i class="'+(i<r.met?'on':'')+'"></i>';
+  var ok = r.met >= MISSION_THRESHOLD;
+  return '<div class="hero"><span class="lbl">'+esc(S.title||'My trip')+' · '+S.days+(S.days===1?' day':' days')+'</span>'+
+    '<div class="num">'+f1(r.total)+'<small>kg</small></div>'+
+    '<span class="badge">'+(pct<1?pct.toFixed(2):f1(pct))+'% of a one-year carbon budget used</span>'+
+    '<p class="note">Based on a personal budget of 5,900 kg per year. Source: Green Transition Institute, 1.5°C Lifestyle calculator.</p></div>'+
+    '<p class="dn"><b>Design note</b>The headline is kg of CO\u2082e, with its share of a yearly budget for scale. Raw numbers alone rarely mean much.</p>'+
+    '<div class="card"><h3>Where it came from</h3><div class="stack" role="img" aria-label="Emission breakdown by category">'+stack+'</div><div class="legend">'+legend+'</div></div>'+
+    '<div class="card center"><h3>Daily kg</h3><p class="sub">Goal: '+DAILY_TARGET_KG+' kg or less per day, long-distance travel not included. Green days stayed within the goal.</p><div class="chips">'+chips+'</div></div>'+
+    '<div class="card center"><h3>To offset this trip</h3><p>About <b>'+(trees<10?f1(trees):Math.round(trees))+' pine trees</b> would be needed (based on 6.6 kg absorbed per tree per year).</p></div>'+
+    '<div class="prog'+(ok?'':' off')+'"><div class="prog-top"><span>Missions completed</span><b>'+r.met+' <em>/ '+MISSION_TOTAL+'</em></b></div><div class="bar"><i style="width:'+(r.met/MISSION_TOTAL*100)+'%"></i></div><p class="prog-foot">'+(ok?'Conditions met (':'Conditions: ')+MISSION_THRESHOLD+' or more of '+MISSION_TOTAL+(ok?')':'')+'</p></div>'+
+    '<div class="card"><h3>Eco missions</h3><ul class="missions">'+ms+'</ul></div>'+
+    '<div class="verdict"><b>'+(ok?'Conditions met':(MISSION_THRESHOLD-r.met)+' more mission'+(MISSION_THRESHOLD-r.met===1?'':'s')+' to meet the conditions')+'</b>'+
+    '<span class="sub">The organizer reviews each record and decides on Zevetrip Pay.</span><b style="margin-top:4px">Show this screen to the organizer.</b></div>'+
+    '<p class="dn"><b>Design note</b>The screen shows whether conditions are met, never an amount. Final judgment stays with a human organizer.</p>'+
+    '<details style="margin-top:1rem"><summary>How these numbers are calculated</summary>'+methodHtml()+'</details>'+
+    '<div class="btns"><button type="button" class="btn ghost" data-go="1">Edit days</button><button type="button" class="btn" data-go="0">Edit trip</button></div>';
+}
+
+function methodHtml(){
+  return '<p class="sub">Every category uses one source with fixed coefficients. 1 kgCO₂e equals 1 point. Web app values are not rounded.</p><div class="scroll"><table>'+
+  '<tr><th>Category</th><th>Values used</th><th>Source</th></tr>'+
+  '<tr><td>Local transport (per 30 min)</td><td class="n">Walk 0.12 · Bus 0.53 · Subway 0.86 · EV 1.42 · Car 1.83 kg</td><td>International Transport Forum factors, via the Green Transition Institute 1.5°C Lifestyle Guidebook (2024); Seoul speed data</td></tr>'+
+  '<tr><td>Distance from travel time</td><td class="n">KTX 173 · Coach 95 · Rail 80 · Car 90 · Flight 450 km/h</td><td>Distance = travel time × average speed. Rail and car speeds are provisional estimates</td></tr>'+
+  '<tr><td>Rail and coach</td><td class="n">KTX 21.9 · Coach 27.76 · Rail 35.46 g/km</td><td>Korail 2022 environmental report; DEFRA/DESNZ 2025</td></tr>'+
+  '<tr><td>Private car, long distance</td><td class="n">161 g/km</td><td>International Transport Forum, via the same guidebook</td></tr>'+
+  '<tr><td>Domestic flights (economy)</td><td class="n">164.6 g/km under 300 km; 130.9 g/km for 300–450 km</td><td>ICAO carbon calculator, routes queried directly</td></tr>'+
+  '<tr><td>Meals (per meal)</td><td class="n">0.59 to 9.31 kg</td><td>Nos Gestes Climat (ADEME, France); Poore &amp; Nemecek 2018; Climate Solutions (SFOC) for Korean red meat</td></tr>'+
+  '<tr><td>Stays (per night)</td><td class="n">1.4 to 28.9 kg</td><td>ADEME 2020 star-rating table (breakfast excluded); Tsai et al. 2014 for resorts</td></tr>'+
+  '<tr><td>Things you used</td><td class="n">Cup 0.07 · Delivery 0.5 · Frozen 1.5 kg</td><td>Lee et al. 2025; Korea Consumer Agency 2022 × DEFRA 2025; frozen/cooler pack is a provisional estimate</td></tr>'+
+  '</table></div><p class="fine">Transport methods differ: city transport and private cars use full life-cycle figures, while rail and flights use operating emissions, so the two are not added into one comparison table. The vegetarian-with-seafood meal is a designed average of two fish values. Mission rules here are simplified for the demo.</p>';
+}
+
+/* ===== Rendering & events ===== */
+function render(){
+  renderSteps();
+  var el = document.getElementById('screen');
+  el.innerHTML = screenIdx===0 ? screenTrip() : screenIdx===1 ? screenDay() : screenResult();
+}
+function go(i){ screenIdx = i; render(); window.scrollTo(0,0); }
+
+function resizeDays(n){
+  S.days = n;
+  while (S.rec.length < n){
+    var base = JSON.parse(JSON.stringify(S.rec[0]));
+    base.stay = 'none';  /* new last day defaults to no stay */
+    S.rec.push(base);
+  }
+  S.rec.length = n;
+  if (activeDay >= n) activeDay = n-1;
+}
+
+document.addEventListener('click',function(e){
+  var t = e.target.closest('button'); if (!t) return;
+  if (t.id==='reset'){ S = sampleState(); activeDay = 0; go(0); return; }
+  if (t.hasAttribute('data-go')){
+    var g = t.getAttribute('data-go');
+    if (g==='next'){ activeDay++; render(); window.scrollTo(0,0); } else go(+g);
+    return;
+  }
+  if (t.hasAttribute('data-day')){ activeDay = +t.getAttribute('data-day'); render(); return; }
+  if (t.hasAttribute('data-trip')){ S.trip = t.getAttribute('data-trip'); render(); return; }
+  if (t.hasAttribute('data-mode')){
+    var nm = t.getAttribute('data-mode'), h = hoursFor(S.mode);
+    h = Math.min(nm==='air'?1:10, Math.max(nm==='air'?0.4:0.2, h));
+    S.mode = nm; S.km = Math.round(h * byId(LONG_MODES,nm).v); render(); return; }
+});
+document.addEventListener('change',function(e){
+  var t = e.target;
+  if (t.id==='title'){ S.title = t.value; return; }
+  if (t.id==='days'){ resizeDays(+t.value); render(); return; }
+  if (t.id==='from'){ S.from = t.value.trim(); return; }
+  if (t.id==='to'){ S.to = t.value.trim(); return; }
+  var d = S.rec[activeDay];
+  if (t.hasAttribute('data-meal')){ d.meals[+t.getAttribute('data-meal')] = t.value; render(); return; }
+  if (t.hasAttribute('data-bind')){ var k = t.getAttribute('data-bind'); d[k] = k==='units' ? +t.value : t.value; render(); return; }
+  if (t.hasAttribute('data-item')){ d.items[t.getAttribute('data-item')] = t.checked ? 1 : 0; render(); return; }
+});
+document.addEventListener('input',function(e){
+  var t = e.target;
+  if (t.id==='hrs'){
+    var h = +t.value; if (!isFinite(h)) return;
+    S.km = Math.round(h * byId(LONG_MODES,S.mode).v);
+    document.getElementById('hrsVal').textContent = f1(h)+' h';
+    liveTrip();
+  }
+});
+render();
+</script>
+</body></html>
